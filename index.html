@@ -135,9 +135,8 @@ function showResult(){
   document.getElementById('goodN').textContent=good;
   document.getElementById('badN').textContent=bad;
   var v=document.getElementById('examVerdict');
-  var isExam=qs.length>=75&&qs===qs;
-  var cat=qs.length>0?qs[0].category:'';
-  if(cat==='EGZAMIN'||qs.length>=75){
+  var allEgzamin=qs.length>0&&qs.every(q=>q.category==='EGZAMIN');
+  if(allEgzamin&&qs.length>=75){
     var pass=good>=65;
     v.style.display='block';
     v.style.background=pass?'#1b3a1b':'#3a1b1b';
