@@ -104,7 +104,7 @@ function renderQ(){
   shuffle(idxs);
   let h='';
   idxs.forEach(i=>{
-    h+=`<button class="answer" onclick="pick(this,${i+1})">${q.answers[i]}</button>`;
+    h+=`<button class="answer" data-idx="${i+1}" onclick="pick(this,${i+1})">${q.answers[i]}</button>`;
   });
   document.getElementById('answers').innerHTML=h;
   document.getElementById('nextBtn').style.display='none';
@@ -114,9 +114,9 @@ function pick(el,idx){
   if(answered)return;answered=true;
   let q=qs[qi],ci=parseInt(q.correct);
   let btns=document.querySelectorAll('.answer');
-  btns.forEach((b,i)=>{
+  btns.forEach(b=>{
     b.disabled=true;
-    if(i+1===ci)b.classList.add(idx===ci?'correct':'highlight');
+    if(parseInt(b.dataset.idx)===ci)b.classList.add(idx===ci?'correct':'highlight');
   });
   if(idx===ci){el.classList.add('correct');good++;}
   else{el.classList.add('wrong');bad++;wrongQs.push(q);}
