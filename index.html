@@ -43,11 +43,7 @@ h1{font-size:1.4em;text-align:center;padding:16px 0;color:#4fc3f7}
 
 <div id="menu" class="screen active">
 <h1>⛵ Żeglarz Jachtowy</h1>
-<div class="mode-btns">
-<button class="mode-btn active" onclick="setMode('cat')">Kategorie</button>
-<button class="mode-btn" onclick="setMode('all')">Wszystkie (208)</button>
-<button class="mode-btn" onclick="setMode('random')">Losowe</button>
-</div>
+<button class="cat-btn" onclick="startQuiz(ALL.slice())" style="text-align:center;border-color:#4fc3f7;color:#4fc3f7">Wszystkie (208)</button>
 <div id="catList"></div>
 </div>
 
@@ -80,15 +76,6 @@ const ALL=[{"category": "RATOWNICTWO", "question": "Jakie służby mają w zakre
 const CATS=[...new Set(ALL.map(q=>q.category))];
 let qs=[],qi=0,good=0,bad=0,wrongQs=[],answered=false;
 
-function setMode(m){
-  document.querySelectorAll('.mode-btn').forEach((b,i)=>{
-    b.classList.toggle('active',['cat','all','random'][i]===m);
-  });
-  if(m==='all'){startQuiz(ALL.slice());}
-  else if(m==='random'){let s=ALL.slice();shuffle(s);startQuiz(s);}
-  else{renderCats();}
-}
-
 function renderCats(){
   let h='';
   CATS.forEach(c=>{
@@ -103,7 +90,7 @@ function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.random()*(i+1)|0;[a
 function startCat(c){startQuiz(ALL.filter(q=>q.category===c));}
 
 function startQuiz(arr){
-  qs=arr;qi=0;good=0;bad=0;wrongQs=[];answered=false;
+  qs=arr;shuffle(qs);qi=0;good=0;bad=0;wrongQs=[];answered=false;
   show('quiz');renderQ();
 }
 
@@ -161,7 +148,7 @@ function showResult(){
 }
 
 function retry(){if(wrongQs.length){startQuiz(wrongQs);}else{showMenu();}}
-function showMenu(){show('menu');setMode('cat');}
+function showMenu(){show('menu');}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
 
 renderCats();
