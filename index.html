@@ -70,6 +70,7 @@ h1{font-size:1.4em;text-align:center;padding:16px 0;color:#4fc3f7}
 <div class="stat-box good"><div class="num" id="goodN">0</div><div>dobrze</div></div>
 <div class="stat-box bad"><div class="num" id="badN">0</div><div>źle</div></div>
 </div>
+<div id="examVerdict" style="display:none;text-align:center;padding:16px;margin:12px 0;border-radius:10px;font-size:1.1em;font-weight:700"></div>
 <button class="cat-btn" onclick="retry()" style="text-align:center;border-color:#4fc3f7">🔄 Powtórz błędne</button>
 <button class="cat-btn" onclick="showMenu()" style="text-align:center">← Menu</button>
 </div>
@@ -112,9 +113,11 @@ function renderQ(){
   document.getElementById('pbar').style.width=((qi/qs.length)*100)+'%';
   document.getElementById('qnum').textContent=q.category+' — '+(qi+1)+' / '+qs.length;
   document.getElementById('qtext').textContent=q.question;
+  let idxs=q.answers.map((_,i)=>i);
+  shuffle(idxs);
   let h='';
-  q.answers.forEach((a,i)=>{
-    h+=`<button class="answer" onclick="pick(this,${i+1})">${a}</button>`;
+  idxs.forEach(i=>{
+    h+=`<button class="answer" onclick="pick(this,${i+1})">${q.answers[i]}</button>`;
   });
   document.getElementById('answers').innerHTML=h;
   document.getElementById('nextBtn').style.display='none';
@@ -144,6 +147,17 @@ function showResult(){
   document.getElementById('scoreText').textContent=good+' / '+qs.length;
   document.getElementById('goodN').textContent=good;
   document.getElementById('badN').textContent=bad;
+  var v=document.getElementById('examVerdict');
+  var isExam=qs.length>=75&&qs===qs;
+  var cat=qs.length>0?qs[0].category:'';
+  if(cat==='EGZAMIN'||qs.length>=75){
+    var pass=good>=65;
+    v.style.display='block';
+    v.style.background=pass?'#1b3a1b':'#3a1b1b';
+    v.style.border='2px solid '+(pass?'#4caf50':'#f44336');
+    v.style.color=pass?'#a5d6a7':'#ef9a9a';
+    v.textContent=pass?'✅ ZDANY (min. 65/75)':'❌ NIEZDANY (potrzeba min. 65/75)';
+  } else { v.style.display='none'; }
 }
 
 function retry(){if(wrongQs.length){startQuiz(wrongQs);}else{showMenu();}}
